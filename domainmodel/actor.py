@@ -28,11 +28,13 @@ class Actor:
         return hash(self.__actor_full_name)
 
     def add_actor_colleague(self, colleague):
-        if not self.check_if_this_actor_worked_with(colleague):
-            self.__colleagues.append(colleague)
+        if type(colleague) is Actor:
+            if not self.check_if_this_actor_worked_with(colleague):
+                self.__colleagues.append(colleague)
 
     def check_if_this_actor_worked_with(self, colleague):
-        return colleague in self.__colleagues
+        if type(colleague) is Actor:
+            return colleague in self.__colleagues
 
 
 class TestActorMethods:
@@ -68,3 +70,35 @@ class TestActorMethods:
         actor3 = Actor("Angelina Jolie")
         assert actor1.__hash__() != actor2.__hash__()
         assert actor1.__hash__() == actor3.__hash__()
+
+    def test_add_actor_colleague(self):
+        actor1 = Actor("Angelina Jolie")
+        actor2 = Actor("Tom Cruise")
+
+        # add new object not of type Actor
+        actor1.add_actor_colleague(50)
+        assert len(actor1.colleagues) == 0
+
+        # add new colleague
+        actor1.add_actor_colleague(actor2)
+        assert actor1.colleagues[0] == actor2
+
+        # add existing colleague
+        actor1.add_actor_colleague(actor2)
+        assert len(actor1.colleagues) == 1
+
+        # add a second colleague
+        actor3 = Actor("Chris Pratt")
+        actor1.add_actor_colleague(actor3)
+        assert len(actor1.colleagues) == 2
+        assert actor1.colleagues[1] == actor3
+
+    def test_check_if_this_actor_worked_with(self):
+        actor1 = Actor("Angelina Jolie")
+        actor2 = Actor("Tom Cruise")
+        actor3 = Actor("Chris Pratt")
+
+        actor1.add_actor_colleague(actor2)
+
+        assert actor1.check_if_this_actor_worked_with(actor2) is True
+        assert actor1.check_if_this_actor_worked_with(actor3) is False
