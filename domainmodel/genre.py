@@ -28,9 +28,32 @@ class TestClassMethods:
 
     def test_init(self):
         genre1 = Genre("Horror")
-        assert repr(genre1) == "<Genre (Horror)>"
+        assert repr(genre1) == "<Genre Horror>"
         genre2 = Genre("")
         assert genre2.genre_name is None
         genre3 = Genre(50)
         assert genre3.genre_name is None
-        # TODO
+
+    def test_repr(self):
+        genre1 = Genre("Horror")
+        assert genre1.__repr__() == "<Genre Horror>"
+
+    def test_eq(self):
+        genre1 = Genre("Horror")
+        genre2 = Genre("Comedy")
+        genre3 = Genre("Horror")
+        assert genre1.__eq__(genre2) is False
+        assert genre1.__eq__(genre3) is True
+
+    def test_lt(self):
+        genre1 = Genre("Horror")
+        genre2 = Genre("Comedy")
+        assert genre1.__lt__(genre2) is False
+        assert genre2.__lt__(genre1) is True
+
+    def test_hash(self):
+        genre1 = Genre("Horror")
+        genre2 = Genre("Comedy")
+        genre3 = Genre("Horror")
+        assert genre1.__hash__() != genre2.__hash__()
+        assert genre1.__hash__() == genre3.__hash__()
