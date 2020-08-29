@@ -40,14 +40,31 @@ class TestActorMethods:
     def test_init(self):
         actor1 = Actor("Angelina Jolie")
         assert repr(actor1) == "<Actor Angelina Jolie>"
-
         actor2 = Actor("")
         assert actor2.actor_full_name is None
-
         actor3 = Actor(50)
         assert actor3.actor_full_name is None
 
-        actor4 = Actor("Jack Black")
-        assert actor4.colleagues == []
-        actor4.add_actor_colleague(actor3)
-        # TODO
+    def test_repr(self):
+        actor1 = Actor("Angelina Jolie")
+        assert actor1.__repr__() == "<Actor Angelina Jolie>"
+
+    def test_eq(self):
+        actor1 = Actor("Angelina Jolie")
+        actor2 = Actor("Jack Black")
+        actor3 = Actor("Angelina Jolie")
+        assert actor1.__eq__(actor2) is False
+        assert actor1.__eq__(actor3) is True
+
+    def test_lt(self):
+        actor1 = Actor("Angelina Jolie")
+        actor2 = Actor("Jack Black")
+        assert actor1.__lt__(actor2) is True
+        assert actor2.__lt__(actor1) is False
+
+    def test_hash(self):
+        actor1 = Actor("Angelina Jolie")
+        actor2 = Actor("Jack Black")
+        actor3 = Actor("Angelina Jolie")
+        assert actor1.__hash__() != actor2.__hash__()
+        assert actor1.__hash__() == actor3.__hash__()
