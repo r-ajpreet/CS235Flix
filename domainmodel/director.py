@@ -39,8 +39,10 @@ class TestDirectorMethods:
 
     def test_eq(self):
         director1 = Director("Taika Waititi")
-        director2 = Director("Taika Waititi")
-        assert director1.__eq__(director2) is True
+        director2 = Director("James Cameron")
+        director3 = Director("Taika Waititi")
+        assert director1.__eq__(director2) is False
+        assert director1.__eq__(director3) is True
 
     def test_lt(self):
         director1 = Director("Taika Waititi")
