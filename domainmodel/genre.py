@@ -24,7 +24,7 @@ class Genre:
         return hash(self.__genre_name)
 
 
-class TestClassMethods:
+class TestGenreMethods:
 
     def test_init(self):
         genre1 = Genre("Horror")
