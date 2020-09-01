@@ -61,11 +61,11 @@ class MovieFileCSVReader:
                 for actor in actors_str:
                     actors.append(Actor(actor))
 
-                runtime = int(row['Runtime (Minutes)'])
+                runtime = row['Runtime (Minutes)']
 
-                rating = float(row['Rating'])
+                rating = row['Rating']
 
-                votes = int(row['Votes'])
+                votes = row['Votes']
 
                 revenue = row['Revenue (Millions)']
 
@@ -84,15 +84,20 @@ class MovieFileCSVReader:
                 for actor in actors:
                     movieObj.add_actor(actor)
 
-                movieObj.runtime = runtime
+                if not runtime == "N/A":
+                    movieObj.runtime_minutes = int(runtime)
 
-                movieObj.rating = rating
+                if not rating == "N/A":
+                    movieObj.rating = float(rating)
 
-                movieObj.votes = votes
+                if not votes == "N/A":
+                    movieObj.votes = int(votes)
 
-                movieObj.revenue = revenue
+                if not revenue == "N/A":
+                    movieObj.revenue = float(revenue)
 
-                movieObj.metascore = metascore
+                if not metascore == "N/A":
+                    movieObj.metascore = int(metascore)
 
                 # populate datasets
                 self.dataset_of_movies.append(movieObj)
@@ -132,3 +137,20 @@ class TestMovieFileCSVReaderMethods:
         assert len(movie_file_reader.dataset_of_actors) == 1985
         assert len(movie_file_reader.dataset_of_directors) == 644
         assert len(movie_file_reader.dataset_of_genres) == 20
+
+        # check assigning of all attributes from CSV to Movie obj
+        movie = movie_file_reader.dataset_of_movies[0]
+        assert movie.title == "Guardians of the Galaxy"
+        assert movie.genres == [Genre("Action"), Genre("Adventure"), Genre("Sci-Fi")]
+        assert movie.description == "A group of intergalactic criminals are forced " \
+                                    "to work together to stop a fanatical warrior " \
+                                    "from taking control of the universe."
+        assert movie.director == Director("James Gunn")
+        assert movie.actors == [Actor("Chris Pratt"),Actor("Vin Diesel"),
+                                Actor("Bradley Cooper"),Actor("Zoe Saldana")]
+        assert movie.year == 2014
+        assert movie.runtime_minutes == 121
+        assert movie.rating == 8.1
+        assert movie.votes == 757074
+        assert movie.revenue == 333.13
+        assert movie.metascore == 76
