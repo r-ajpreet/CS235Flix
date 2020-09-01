@@ -1,5 +1,7 @@
 from typing import List
 
+import pytest
+
 from domainmodel.movie import Movie
 
 
@@ -22,9 +24,9 @@ class WatchList:
             self.__watchlist.pop(i)
 
     def select_movie_to_watch(self, index):
-        if self.size == 0:
+        if self.size() == 0:
             return None
-        elif type(index) is int and 0 <= index < self.size:
+        elif type(index) is int and 0 <= index < self.size():
             return self.__watchlist[index]
         else:
             return None
@@ -39,35 +41,100 @@ class WatchList:
             return self.__watchlist[0]
 
     def __iter__(self):
+        self.n = 0
         return self
 
     def __next__(self):
-        # TODO
-        pass
+        if 0 <= self.n < self.size():
+            result = self.__watchlist[self.n]
+            self.n += 1
+            return result
+        else:
+            raise StopIteration
 
 
 class TestWatchListMethods:
 
     def test_init(self):
-        # TODO
-        pass
+        watchlist = WatchList()
+        assert watchlist.watchlist == []
+        print(watchlist.watchlist)
 
     def test_add_movie(self):
-        # TODO
-        pass
+        watchlist = WatchList()
+        movie1 = Movie("Moana", 2016)
+        movie2 = Movie("Frozen", 2014)
+        watchlist.add_movie(movie1)
+        assert len(watchlist.watchlist) == 1
+        assert watchlist.watchlist[0] == movie1
+        watchlist.add_movie(movie2)
+        assert len(watchlist.watchlist) == 2
+        assert watchlist.watchlist[1] == movie2
+        watchlist.add_movie(movie1)
+        assert len(watchlist.watchlist) == 2
+        watchlist.add_movie("")
+        assert len(watchlist.watchlist) == 2
 
     def test_remove_movie(self):
-        # TODO
-        pass
+        watchlist = WatchList()
+        movie = Movie("Moana", 2016)
+        watchlist.add_movie(movie)
+        watchlist.remove_movie("")
+        assert len(watchlist.watchlist) == 1
+        watchlist.remove_movie(movie)
+        assert len(watchlist.watchlist) == 0
+        watchlist.remove_movie(movie)
+        assert len(watchlist.watchlist) == 0
 
     def test_select_movie_to_watch(self):
-        # TODO
-        pass
+        watchlist = WatchList()
+        movie1 = Movie("Moana", 2016)
+        movie2 = Movie("Frozen", 2014)
+        assert watchlist.select_movie_to_watch(0) is None
+        watchlist.add_movie(movie1)
+        assert watchlist.select_movie_to_watch(0) == movie1
+        assert watchlist.select_movie_to_watch(1) is None
+        watchlist.add_movie(movie2)
+        assert watchlist.select_movie_to_watch(1) == movie2
+        watchlist.remove_movie(movie1)
+        assert watchlist.select_movie_to_watch(1) is None
+        assert watchlist.select_movie_to_watch(0) == movie2
+        assert watchlist.select_movie_to_watch("0") is None
+        assert watchlist.select_movie_to_watch(-1) is None
 
     def test_size(self):
-        # TODO
-        pass
+        watchlist = WatchList()
+        assert watchlist.size() == 0
+        movie1 = Movie("Moana", 2016)
+        movie2 = Movie("Frozen", 2014)
+        watchlist.add_movie(movie1)
+        assert watchlist.size() == 1
+        watchlist.add_movie(movie2)
+        assert watchlist.size() == 2
+        watchlist.remove_movie(movie1)
+        assert watchlist.size() == 1
 
     def test_first_movie_in_watchlist(self):
-        # TODO
-        pass
+        watchlist = WatchList()
+        assert watchlist.first_movie_in_watchlist() is None
+        movie1 = Movie("Moana", 2016)
+        watchlist.add_movie(movie1)
+        assert watchlist.first_movie_in_watchlist() == movie1
+
+    def test_iterator(self):
+        watchlist = WatchList()
+        movie1 = Movie("Moana", 2016)
+        movie2 = Movie("Frozen", 2014)
+        watchlist.add_movie(movie1)
+        watchlist.add_movie(movie2)
+
+        i = iter(watchlist)
+
+        # test __iter__
+        assert i == watchlist.__iter__()
+
+        # test __next__
+        assert next(i) == watchlist.watchlist[0] == movie1
+        assert next(i) == watchlist.watchlist[1] == movie2
+        with pytest.raises(StopIteration):
+            next(i)
