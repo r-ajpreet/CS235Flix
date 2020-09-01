@@ -2,7 +2,6 @@ from datetime import datetime
 
 from domainmodel.movie import Movie
 
-
 class Review:
 
     def __init__(self, movie: Movie, review_text: str, rating: int):
@@ -23,9 +22,6 @@ class Review:
 
         self.__timestamp = datetime.now()
 
-        # user who wrote review - in later Q
-        # self.__user = None
-
     @property
     def movie(self) -> Movie:
         return self.__movie
@@ -42,10 +38,6 @@ class Review:
     def timestamp(self) -> datetime:
         return self.__timestamp
 
-    # @property
-    # def user(self) -> User:
-    #     return self.__user
-
     def __repr__(self):
         return f"Review: {self.__review_text}\nRating: {self.__rating}"
 
@@ -59,13 +51,21 @@ class Review:
 class TestReviewMethods:
 
     def test_init(self):
-        movie = Movie("Moana", 2016)
-        review_text = "This movie was very enjoyable."
-        rating = 8
-        review = Review(movie, review_text, rating)
-        assert review.movie == movie
-        assert review.review_text == review_text
-        assert review.rating == rating
+        movie1 = Movie("Moana", 2016)
+        review_text1 = "This movie was very enjoyable."
+        rating1 = 8
+        review1 = Review(movie1, review_text1, rating1)
+        assert review1.movie == movie1
+        assert review1.review_text == review_text1
+        assert review1.rating == rating1
+
+        movie2 = ""
+        review_text2 = ""
+        rating2 = ""
+        review2 = Review(movie2, review_text2, rating2)
+        assert review2.movie is None
+        assert review2.review_text is None
+        assert review2.rating is None
 
     def test_repr(self):
         movie = Movie("Moana", 2016)
