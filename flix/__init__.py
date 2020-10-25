@@ -33,8 +33,8 @@ def create_app(test_config=None):
         from .home import home
         app.register_blueprint(home.home_blueprint)
 
-        from .movies000 import movies000
-        app.register_blueprint(movies000.movies000_blueprint)
+        from .movies import movies
+        app.register_blueprint(movies.movies_blueprint)
 
         from .authentication import authentication
         app.register_blueprint(authentication.authentication_blueprint)

@@ -10,13 +10,13 @@ from wtforms.validators import DataRequired, Length, ValidationError
 
 import flix.adapters.repository as repo
 import flix.utilities.utilities as utilities
-import flix.movies000.services as services
+import flix.movies.services as services
 
 from flix.authentication.authentication import login_required
 
 
 # Configure Blueprint.
-movies000_blueprint = Blueprint(
-    'movies000_bp', __name__)
+movies_blueprint = Blueprint(
+    'movies_bp', __name__)
 
 #TODO

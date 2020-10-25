@@ -2,7 +2,6 @@ from flask import Blueprint, render_template
 
 import flix.utilities.utilities as utilities
 
-
 home_blueprint = Blueprint(
     'home_bp', __name__)
 
@@ -12,5 +11,5 @@ def home():
     return render_template(
         'home/home.html',
         selected_movies=utilities.get_selected_movies(),
-        #TODO
+        tag_urls=utilities.get_tags_and_urls()
     )
