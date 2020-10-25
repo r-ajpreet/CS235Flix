@@ -1,7 +1,7 @@
 # CS235Flix
 The python project for the 2020 S2 CompSci 235 practical assignment CS235Flix, including extensions.
 
-# COVID-19 Web Application
+# Movies Web Application
 
 ## Description
 
@@ -48,10 +48,10 @@ Testing requires that file *COMPSCI-235/tests/conftest.py* be edited to set the 
 
 E.g. 
 
-`TEST_DATA_PATH = os.path.join('C:', os.sep, 'Users', 'ian', 'Documents', 'Python dev', 'COVID-19', 'tests', 'data')`
+`TEST_DATA_PATH = os.path.join('Users', 'rajpreetsingh', 'Dropbox', 'Raj', 'UoA', '2020', '2 - Semester Two', 'COMPSCI 235', 'Assessments', 'CS235Flix', 'tests', 'data')`
 
 assigns TEST_DATA_PATH with the following value (the use of os.path.join and os.sep ensures use of the correct platform path separator):
 
-`C:\Users\ian\Documents\python-dev\COVID-19\tests\data`
+`Users/rajpreetsingh/Dropbox/Raj/UoA/2020/2 - Semester Two/COMPSCI 235/Assessments/CS235Flix/tests/data'
 
 You can then run tests from within PyCharm.
