@@ -3,6 +3,10 @@
   <component name="NewModuleRootManager">
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/.pytest_cache" />
+      <excludeFolder url="file://$MODULE_DIR$/AAA_PREV_FILES/ACTIVITYSIMULATIONS" />
+      <excludeFolder url="file://$MODULE_DIR$/AAA_PREV_FILES/DATAFILEREADERS" />
+      <excludeFolder url="file://$MODULE_DIR$/AAA_PREV_FILES/DATAFILES" />
+      <excludeFolder url="file://$MODULE_DIR$/AAA_PREV_FILES/DOMAINMODEL" />
       <excludeFolder url="file://$MODULE_DIR$/ACTIVITYSIMULATIONS" />
       <excludeFolder url="file://$MODULE_DIR$/tests/unit/.pytest_cache" />
       <excludeFolder url="file://$MODULE_DIR$/venv" />
