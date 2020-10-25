@@ -20,6 +20,7 @@ class Movie:
         else:
             self.__year = movie_release_year
 
+        self.__rank = None
         self.__description = None
         self.__director = None
         self.__actors = []
@@ -49,6 +50,15 @@ class Movie:
     def year(self, year):
         if type(year) is int and year > 1900:
             self.__year = year
+
+    @property
+    def rank(self):
+        return self.__rank
+
+    @rank.setter
+    def rank(self, rank):
+        if type(rank) is int and rank >= 0:
+            self.__rank = rank
 
     @property
     def description(self) -> str:

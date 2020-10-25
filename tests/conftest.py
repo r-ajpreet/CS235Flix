@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from flix import create_app
+# from flix import create_app
 from flix.adapters import memory_repository
 from flix.adapters.memory_repository import MemoryRepository
 

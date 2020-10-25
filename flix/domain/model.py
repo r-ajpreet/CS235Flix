@@ -1,11 +1,17 @@
-# =====
-# ACTOR
-# =====
+"""
+Domain Model, contains classes for:
+Actor; Director; Genre; Movie; Review; User; WatchList
+"""
+
 from datetime import datetime
 from typing import List
 
 import pytest
 
+
+# =====
+# ACTOR
+# =====
 
 class Actor:
 
@@ -14,7 +20,7 @@ class Actor:
             self.__actor_full_name = None
         else:
             self.__actor_full_name = actor_full_name.strip()
-        self.__colleagues = []
+        self.__colleagues = list()
 
     @property
     def actor_full_name(self) -> str:
@@ -46,73 +52,6 @@ class Actor:
             return colleague in self.__colleagues
 
 
-class TestActorMethods:
-
-    def test_init(self):
-        actor1 = Actor("Angelina Jolie")
-        assert repr(actor1) == "<Actor Angelina Jolie>"
-        actor2 = Actor("")
-        assert actor2.actor_full_name is None
-        actor3 = Actor(50)
-        assert actor3.actor_full_name is None
-
-    def test_repr(self):
-        actor1 = Actor("Angelina Jolie")
-        assert actor1.__repr__() == "<Actor Angelina Jolie>"
-
-    def test_eq(self):
-        actor1 = Actor("Angelina Jolie")
-        actor2 = Actor("Jack Black")
-        actor3 = Actor("Angelina Jolie")
-        assert actor1.__eq__(actor2) is False
-        assert actor1.__eq__(actor3) is True
-
-    def test_lt(self):
-        actor1 = Actor("Angelina Jolie")
-        actor2 = Actor("Jack Black")
-        assert actor1.__lt__(actor2) is True
-        assert actor2.__lt__(actor1) is False
-
-    def test_hash(self):
-        actor1 = Actor("Angelina Jolie")
-        actor2 = Actor("Jack Black")
-        actor3 = Actor("Angelina Jolie")
-        assert actor1.__hash__() != actor2.__hash__()
-        assert actor1.__hash__() == actor3.__hash__()
-
-    def test_add_actor_colleague(self):
-        actor1 = Actor("Angelina Jolie")
-        actor2 = Actor("Tom Cruise")
-
-        # add new object not of type Actor
-        actor1.add_actor_colleague(50)
-        assert len(actor1.colleagues) == 0
-
-        # add new colleague
-        actor1.add_actor_colleague(actor2)
-        assert actor1.colleagues[0] == actor2
-
-        # add existing colleague
-        actor1.add_actor_colleague(actor2)
-        assert len(actor1.colleagues) == 1
-
-        # add a second colleague
-        actor3 = Actor("Chris Pratt")
-        actor1.add_actor_colleague(actor3)
-        assert len(actor1.colleagues) == 2
-        assert actor1.colleagues[1] == actor3
-
-    def test_check_if_this_actor_worked_with(self):
-        actor1 = Actor("Angelina Jolie")
-        actor2 = Actor("Tom Cruise")
-        actor3 = Actor("Chris Pratt")
-
-        actor1.add_actor_colleague(actor2)
-
-        assert actor1.check_if_this_actor_worked_with(actor2) is True
-        assert actor1.check_if_this_actor_worked_with(actor3) is False
-
-
 # ========
 # DIRECTOR
 # ========
@@ -140,41 +79,6 @@ class Director:
 
     def __hash__(self):
         return hash(self.__director_full_name)
-
-
-class TestDirectorMethods:
-
-    def test_init(self):
-        director1 = Director("Taika Waititi")
-        assert repr(director1) == "<Director Taika Waititi>"
-        director2 = Director("")
-        assert director2.director_full_name is None
-        director3 = Director(42)
-        assert director3.director_full_name is None
-
-    def test_repr(self):
-        director1 = Director("Taika Waititi")
-        assert director1.__repr__() == "<Director Taika Waititi>"
-
-    def test_eq(self):
-        director1 = Director("Taika Waititi")
-        director2 = Director("James Cameron")
-        director3 = Director("Taika Waititi")
-        assert director1.__eq__(director2) is False
-        assert director1.__eq__(director3) is True
-
-    def test_lt(self):
-        director1 = Director("Taika Waititi")
-        director2 = Director("James Cameron")
-        assert director1.__lt__(director2) is False
-        assert director2.__lt__(director1) is True
-
-    def test_hash(self):
-        director1 = Director("Taika Waititi")
-        director2 = Director("James Cameron")
-        director3 = Director("Taika Waititi")
-        assert director1.__hash__() != director2.__hash__()
-        assert director1.__hash__() == director3.__hash__()
 
 
 # =====
@@ -207,41 +111,6 @@ class Genre:
         return hash(self.__genre_name)
 
 
-class TestGenreMethods:
-
-    def test_init(self):
-        genre1 = Genre("Horror")
-        assert repr(genre1) == "<Genre Horror>"
-        genre2 = Genre("")
-        assert genre2.genre_name is None
-        genre3 = Genre(50)
-        assert genre3.genre_name is None
-
-    def test_repr(self):
-        genre1 = Genre("Horror")
-        assert genre1.__repr__() == "<Genre Horror>"
-
-    def test_eq(self):
-        genre1 = Genre("Horror")
-        genre2 = Genre("Comedy")
-        genre3 = Genre("Horror")
-        assert genre1.__eq__(genre2) is False
-        assert genre1.__eq__(genre3) is True
-
-    def test_lt(self):
-        genre1 = Genre("Horror")
-        genre2 = Genre("Comedy")
-        assert genre1.__lt__(genre2) is False
-        assert genre2.__lt__(genre1) is True
-
-    def test_hash(self):
-        genre1 = Genre("Horror")
-        genre2 = Genre("Comedy")
-        genre3 = Genre("Horror")
-        assert genre1.__hash__() != genre2.__hash__()
-        assert genre1.__hash__() == genre3.__hash__()
-
-
 # =====
 # MOVIE
 # =====
@@ -260,6 +129,7 @@ class Movie:
         else:
             self.__year = movie_release_year
 
+        self.__rank = None
         self.__description = None
         self.__director = None
         self.__actors = []
@@ -269,6 +139,7 @@ class Movie:
         self.__votes = None
         self.__revenue = None
         self.__metascore = None
+        self.__reviews: List[Review] = list()
 
     @property
     def title(self) -> str:
@@ -289,6 +160,15 @@ class Movie:
     def year(self, year):
         if type(year) is int and year > 1900:
             self.__year = year
+
+    @property
+    def rank(self) -> int:
+        return self.__rank
+
+    @rank.setter
+    def rank(self, rank):
+        if type(rank) is int and rank >= 0:
+            self.__rank = rank
 
     @property
     def description(self) -> str:
@@ -373,6 +253,15 @@ class Movie:
         if type(metascore) is int and 0 <= metascore <= 100:
             self.__metascore = metascore
 
+    @property
+    def reviews(self):
+        return self.__reviews
+
+    @reviews.setter
+    def reviews(self, reviews):
+        if type(reviews) == List[Review]:
+            self.__reviews = reviews
+
     def concat_string(self):
         return str(self.__title) + str(self.__year)
 
@@ -406,351 +295,6 @@ class Movie:
         if type(genre) is Genre and genre in self.__genres:
             i = self.__genres.index(genre)
             self.__genres.pop(i)
-
-
-class TestMovieMethods:
-
-    def test_init(self):
-        # correct inputs
-        movie1 = Movie("Moana", 2016)
-        assert repr(movie1) == "<Movie Moana, 2016>"
-
-        # None inputs
-        movie2 = Movie(None, None)
-        assert repr(movie2) == "<Movie None, None>"
-
-        # "" and None inputs
-        movie3 = Movie("", None)
-        assert repr(movie3) == "<Movie None, None>"
-
-        # "correct title, year incorrect
-        movie4 = Movie("Moana", 1816)
-        assert repr(movie4) == "<Movie Moana, None>"
-
-    def test_title(self):
-        # correct input
-        movie1 = Movie("Mona", 2016)
-        movie1.title = "Moana"
-        assert movie1.title == "Moana"
-
-        # incorrect input
-        movie2 = Movie("Frozn", 2014)
-        movie2.title = 10
-        assert movie2.title == "Frozn"
-
-    def test_year(self):
-        # correct input
-        movie1 = Movie("Moana", 2015)
-        movie1.year = 2016
-        assert movie1.year == 2016
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2013)
-        movie1.year = "2014"
-        assert movie2.year == 2013
-
-    def test_description(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.description = "TEST"
-        assert movie1.description == "TEST"
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2014)
-        movie2.description = 100
-        assert movie2.description is None
-
-    def test_director(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        director1 = Director("Ron Clements")
-        movie1.director = director1
-        assert movie1.director == director1
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2014)
-        movie2.director = "Chris Buck"
-        assert movie2.director is None
-
-    def test_actors(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.actors = [Actor("Dwayne Johnson"), Actor("Rachel House")]
-        assert movie1.actors == [Actor("Dwayne Johnson"), Actor("Rachel House")]
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2014)
-        # movie2.actors = [Director("Chris Buck")]
-        # not testing as no type checking in place in method currently (kept encountering errors)
-        # assert movie2.actors == []
-
-    def test_genres(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.genres = [Genre("Animation"), Genre("Comedy")]
-        assert movie1.genres == [Genre("Animation"), Genre("Comedy")]
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2014)
-        # movie2.genres = [Director("Chris Buck")]
-        # not testing as no type checking in place in method currently (kept encountering errors)
-        # assert movie2.genres == []
-
-    def test_runtime_minutes(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.runtime_minutes = 107
-        assert movie1.runtime_minutes == 107
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2014)
-        with pytest.raises(ValueError):
-            movie2.runtime_minutes = "107"
-
-    def test_rating(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.rating = 7.7
-        assert movie1.rating == 7.7
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2014)
-        movie2.rating = "7.4"
-        assert movie2.rating is None
-
-    def test_votes(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.votes = 118151
-        assert movie1.votes == 118151
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2014)
-        movie2.votes = "123456"
-        assert movie2.votes is None
-
-    def test_revenue(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.revenue = 100.01
-        assert movie1.revenue == 100.01
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2014)
-        movie2.revenue = "123.45"
-        assert movie2.revenue is None
-
-    def test_metascore(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.metascore = 81
-        assert movie1.metascore == 81
-
-        # incorrect input
-        movie2 = Movie("Frozen", 2014)
-        movie2.metascore = 85.5
-        assert movie2.metascore is None
-
-    def test_concat_string(self):
-        movie1 = Movie("Moana", 2016)
-        assert movie1.concat_string() == "Moana2016"
-        movie2 = Movie("Moana", "")
-        assert movie2.concat_string() == "MoanaNone"
-        movie3 = Movie("", 2016)
-        assert movie3.concat_string() == "None2016"
-
-    def test_repr(self):
-        movie1 = Movie("Moana", 2016)
-        movie2 = Movie("Moana", "")
-        movie3 = Movie("", 2016)
-        assert movie1.__repr__() == "<Movie Moana, 2016>"
-        assert movie2.__repr__() == "<Movie Moana, None>"
-        assert movie3.__repr__() == "<Movie None, 2016>"
-
-    def test_eq(self):
-        movie1 = Movie("Moana", 2016)
-        movie2 = Movie("Frozen", 2014)
-        movie3 = Movie("Moana", 2016)
-        movie4 = Movie("Moana", 2020)
-        assert movie1.__eq__(movie2) is False
-        assert movie1.__eq__(movie3) is True
-        assert movie1.__eq__(movie4) is False
-
-    def test_lt(self):
-        movie1 = Movie("Moana", 2016)
-        movie2 = Movie("Frozen", 2014)
-        movie3 = Movie("Moana", 2020)
-        assert movie1.__lt__(movie2) is False
-        assert movie2.__lt__(movie1) is True
-        assert movie1.__lt__(movie3) is True
-        assert movie3.__lt__(movie1) is False
-
-    def test_hash(self):
-        movie1 = Movie("Moana", 2016)
-        movie2 = Movie("Frozen", 2014)
-        movie3 = Movie("Moana", 2016)
-        assert movie1.__hash__() != movie2.__hash__()
-        assert movie1.__hash__() == movie3.__hash__()
-
-    def test_add_actor(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.add_actor(Actor("Dwayne Johnson"))
-        assert movie1.actors == [Actor("Dwayne Johnson")]
-
-        # incorrect input
-        movie1.add_actor(Director("Ron Clements"))
-        assert movie1.actors == [Actor("Dwayne Johnson")]
-
-        # adding an actor twice
-        movie1.add_actor(Actor("Dwayne Johnson"))
-        assert movie1.actors == [Actor("Dwayne Johnson")]
-
-        # adding a second actor
-        movie1.add_actor(Actor("Rachel House"))
-        assert movie1.actors == [Actor("Dwayne Johnson"), Actor("Rachel House")]
-
-    def test_remove_actor(self):
-        movie1 = Movie("Moana", 2016)
-        movie1.add_actor(Actor("Dwayne Johnson"))
-
-        # correct input
-        movie1.remove_actor(Actor("Dwayne Johnson"))
-        assert movie1.actors == []
-
-        # incorrect input
-        movie1.add_actor(Actor("Dwayne Johnson"))
-        movie1.remove_actor(Director("Dwayne Johnson"))
-        assert movie1.actors == [Actor("Dwayne Johnson")]
-
-        # removing an actor not in list
-        movie1.remove_actor(Actor("Rachel House"))
-        assert movie1.actors == [Actor("Dwayne Johnson")]
-
-    def test_add_genre(self):
-        # correct input
-        movie1 = Movie("Moana", 2016)
-        movie1.add_genre(Genre("Animation"))
-        assert movie1.genres == [Genre("Animation")]
-
-        # incorrect input
-        movie1.add_actor(Director("Ron Clements"))
-        assert movie1.genres == [Genre("Animation")]
-
-        # adding a genre twice
-        movie1.add_genre(Genre("Animation"))
-        assert movie1.genres == [Genre("Animation")]
-
-        # adding a second genre
-        movie1.add_genre(Genre("Comedy"))
-        assert movie1.genres == [Genre("Animation"), Genre("Comedy")]
-
-    def test_remove_genre(self):
-        movie1 = Movie("Moana", 2016)
-        movie1.add_genre(Genre("Animation"))
-
-        # correct input
-        movie1.remove_genre(Genre("Animation"))
-        assert movie1.genres == []
-
-        # incorrect input
-        movie1.add_genre(Genre("Animation"))
-        movie1.remove_genre(Director("Animation"))
-        assert movie1.genres == [Genre("Animation")]
-
-        # removing a genre not in list
-        movie1.remove_genre(Genre("Comedy"))
-        assert movie1.genres == [Genre("Animation")]
-
-
-# ======
-# REVIEW
-# ======
-
-class Review:
-
-    def __init__(self, movie: Movie, review_text: str, rating: int):
-        if type(movie) is Movie:
-            self.__movie = movie
-        else:
-            self.__movie = None
-
-        if type(review_text) is not str or review_text == "":
-            self.__review_text = None
-        else:
-            self.__review_text = review_text
-
-        if type(rating) is int and 0 < rating < 11:
-            self.__rating = rating
-        else:
-            self.__rating = None
-
-        self.__timestamp = datetime.now()
-
-    @property
-    def movie(self) -> Movie:
-        return self.__movie
-
-    @property
-    def review_text(self) -> str:
-        return self.__review_text
-
-    @property
-    def rating(self) -> int:
-        return self.__rating
-
-    @property
-    def timestamp(self) -> datetime:
-        return self.__timestamp
-
-    def __repr__(self):
-        return f"Review: {self.__review_text}\nRating: {self.__rating}"
-
-    def __eq__(self, other):
-        return (self.__movie == other.__movie and
-                self.__review_text == other.__review_text and
-                self.__rating == other.__rating and
-                self.__timestamp == other.__timestamp)
-
-
-class TestReviewMethods:
-
-    def test_init(self):
-        movie1 = Movie("Moana", 2016)
-        review_text1 = "This movie was very enjoyable."
-        rating1 = 8
-        review1 = Review(movie1, review_text1, rating1)
-        assert review1.movie == movie1
-        assert review1.review_text == review_text1
-        assert review1.rating == rating1
-
-        movie2 = ""
-        review_text2 = ""
-        rating2 = ""
-        review2 = Review(movie2, review_text2, rating2)
-        assert review2.movie is None
-        assert review2.review_text is None
-        assert review2.rating is None
-
-    def test_repr(self):
-        movie = Movie("Moana", 2016)
-        review_text = "This movie was very enjoyable."
-        rating = 8
-        review = Review(movie, review_text, rating)
-        assert review.__repr__() == "Review: This movie was very enjoyable.\nRating: 8"
-
-    def test_eq(self):
-        movie1 = Movie("Moana", 2016)
-        movie2 = Movie("Frozen", 2014)
-        review_text = "This movie was very enjoyable."
-        rating = 8
-        review1 = Review(movie1, review_text, rating)
-        review2 = Review(movie2, review_text, rating)
-        review3 = Review(movie1, review_text, rating)
-        review4 = review1
-        assert review1.__eq__(review2) is False
-        assert review1.__eq__(review3) is False
-        assert review1.__eq__(review4) is True
 
 
 # ====
@@ -788,7 +332,7 @@ class User:
         return self.__watched_movies
 
     @property
-    def reviews(self) -> List[Review]:
+    def reviews(self):
         return self.__reviews
 
     @property
@@ -822,68 +366,68 @@ class User:
             self.__reviews.append(review)
 
 
-class TestUserMethods:
+# ======
+# REVIEW
+# ======
 
-    def test_init(self):
-        user1 = User('Martin', 'pw12345')
-        assert user1.user_name == 'martin'
-        assert user1.password == 'pw12345'
-        user2 = User('', 'pw67890')
-        assert user2.user_name is None
-        assert user2.password == 'pw67890'
-        user3 = User('Daniel', 12345)
-        assert user3.user_name == 'daniel'
-        assert user3.password is None
+class Review:
 
-    def test_time_spent(self):
-        user1 = User('Martin', 'pw12345')
-        user1.time_spent_watching_movies_minutes = 100
-        assert user1.time_spent_watching_movies_minutes == 100
-        user2 = User('Ian', 'pw67890')
-        user2.time_spent_watching_movies_minutes = -100
-        assert user2.time_spent_watching_movies_minutes == 0
+    def __init__(self, user: User, movie: Movie, review_text: str, rating: int, timestamp: datetime):
+        if type(user) is User:
+            self.__user = user
+        else:
+            self.__user = None
 
-    def test_watch_movie(self):
-        user = User('Martin', 'pw12345')
+        if type(movie) is Movie:
+            self.__movie = movie
+        else:
+            self.__movie = None
 
-        movie1 = Movie('Moana', 2016)
-        movie1.runtime_minutes = 113
+        if type(review_text) is not str or review_text == "":
+            self.__review_text = None
+        else:
+            self.__review_text = review_text
 
-        movie2 = Movie('Frozen', 2014)
-        movie2.runtime_minutes = 109
+        if type(rating) is int and 0 < rating < 11:
+            self.__rating = rating
+        else:
+            self.__rating = None
 
-        user.watch_movie(movie1)
-        assert len(user.watched_movies) == 1
-        assert user.watched_movies[0] == movie1
-        assert user.time_spent_watching_movies_minutes == 113
+        if type(timestamp) is datetime:
+            self.__timestamp = datetime
+        else:
+            self.__timestamp = None
 
-        user.watch_movie(movie2)
-        assert len(user.watched_movies) == 2
-        assert user.watched_movies[1] == movie2
-        assert user.time_spent_watching_movies_minutes == 222
+    @property
+    def user(self) -> User:
+        return self.__user
 
-        user.watch_movie(movie1)
-        assert len(user.watched_movies) == 2
-        assert user.time_spent_watching_movies_minutes == 222
+    @property
+    def movie(self) -> Movie:
+        return self.__movie
 
-    def test_add_review(self):
-        user = User('Martin', 'pw12345')
-        movie1 = Movie('Moana', 2016)
-        review1 = Review(movie1, 'I liked it', 10)
-        movie2 = Movie('Frozen', 2014)
-        review2 = Review(movie2, 'I did not like it', 1)
-        review3 = review1
+    @property
+    def review_text(self) -> str:
+        return self.__review_text
 
-        user.add_review(review1)
-        assert len(user.reviews) == 1
-        assert user.reviews[0] == review1
+    @property
+    def rating(self) -> int:
+        return self.__rating
 
-        user.add_review(review2)
-        assert len(user.reviews) == 2
-        assert user.reviews[1] == review2
+    @property
+    def timestamp(self) -> datetime:
+        return self.__timestamp
 
-        user.add_review(review3)
-        assert len(user.reviews) == 2
+    def __repr__(self):
+        username = self.user.user_name
+        return f"User: {username}\nReview: {self.__review_text}\nRating: {self.__rating}"
+
+    def __eq__(self, other):
+        return (self.__user == other.__user and
+                self.__movie == other.__movie and
+                self.__review_text == other.__review_text and
+                self.__rating == other.__rating and
+                self.__timestamp == other.__timestamp)
 
 
 # =========
@@ -939,88 +483,22 @@ class WatchList:
             raise StopIteration
 
 
-class TestWatchListMethods:
+###########################
+# Other classes/functions #
+###########################
 
-    def test_init(self):
-        watchlist = WatchList()
-        assert watchlist.watchlist == []
-        print(watchlist.watchlist)
+class ModelException(Exception):
+    pass
 
-    def test_add_movie(self):
-        watchlist = WatchList()
-        movie1 = Movie("Moana", 2016)
-        movie2 = Movie("Frozen", 2014)
-        watchlist.add_movie(movie1)
-        assert len(watchlist.watchlist) == 1
-        assert watchlist.watchlist[0] == movie1
-        watchlist.add_movie(movie2)
-        assert len(watchlist.watchlist) == 2
-        assert watchlist.watchlist[1] == movie2
-        watchlist.add_movie(movie1)
-        assert len(watchlist.watchlist) == 2
-        watchlist.add_movie("")
-        assert len(watchlist.watchlist) == 2
 
-    def test_remove_movie(self):
-        watchlist = WatchList()
-        movie = Movie("Moana", 2016)
-        watchlist.add_movie(movie)
-        watchlist.remove_movie("")
-        assert len(watchlist.watchlist) == 1
-        watchlist.remove_movie(movie)
-        assert len(watchlist.watchlist) == 0
-        watchlist.remove_movie(movie)
-        assert len(watchlist.watchlist) == 0
+def make_review(user: User, movie: Movie, review_text: str, rating: int, timestamp: datetime = datetime.now()):
+    review = Review(user, movie, review_text, rating, timestamp)
+    user.add_review(review)
+    movie.add_review(review)
 
-    def test_select_movie_to_watch(self):
-        watchlist = WatchList()
-        movie1 = Movie("Moana", 2016)
-        movie2 = Movie("Frozen", 2014)
-        assert watchlist.select_movie_to_watch(0) is None
-        watchlist.add_movie(movie1)
-        assert watchlist.select_movie_to_watch(0) == movie1
-        assert watchlist.select_movie_to_watch(1) is None
-        watchlist.add_movie(movie2)
-        assert watchlist.select_movie_to_watch(1) == movie2
-        watchlist.remove_movie(movie1)
-        assert watchlist.select_movie_to_watch(1) is None
-        assert watchlist.select_movie_to_watch(0) == movie2
-        assert watchlist.select_movie_to_watch("0") is None
-        assert watchlist.select_movie_to_watch(-1) is None
+    return review
 
-    def test_size(self):
-        watchlist = WatchList()
-        assert watchlist.size() == 0
-        movie1 = Movie("Moana", 2016)
-        movie2 = Movie("Frozen", 2014)
-        watchlist.add_movie(movie1)
-        assert watchlist.size() == 1
-        watchlist.add_movie(movie2)
-        assert watchlist.size() == 2
-        watchlist.remove_movie(movie1)
-        assert watchlist.size() == 1
 
-    def test_first_movie_in_watchlist(self):
-        watchlist = WatchList()
-        assert watchlist.first_movie_in_watchlist() is None
-        movie1 = Movie("Moana", 2016)
-        watchlist.add_movie(movie1)
-        assert watchlist.first_movie_in_watchlist() == movie1
-
-    def test_iterator(self):
-        watchlist = WatchList()
-        movie1 = Movie("Moana", 2016)
-        movie2 = Movie("Frozen", 2014)
-        watchlist.add_movie(movie1)
-        watchlist.add_movie(movie2)
-
-        i = iter(watchlist)
-
-        # test __iter__
-        assert i == watchlist.__iter__()
-
-        # test __next__
-        assert next(i) == watchlist.watchlist[0] == movie1
-        assert next(i) == watchlist.watchlist[1] == movie2
-        with pytest.raises(StopIteration):
-            next(i)
+def make_tag_association(movie: Movie, tag):
+    # TODO
+    pass

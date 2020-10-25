@@ -1,10 +1,10 @@
 import csv
 from typing import List
 
-from flix.domain import Movie
-from flix.domain import Actor
-from flix.domain import Genre
-from flix.domain import Director
+from DOMAINMODEL.actor import Actor
+from DOMAINMODEL.director import Director
+from DOMAINMODEL.genre import Genre
+from DOMAINMODEL.movie import Movie
 
 
 class MovieFileCSVReader:
@@ -52,6 +52,8 @@ class MovieFileCSVReader:
 
                 year = int(row['Year'])
 
+                rank = row['Rank']
+
                 description = row['Description']
 
                 director = Director(row['Director'])
@@ -76,6 +78,8 @@ class MovieFileCSVReader:
 
                 for genre in genres:
                     movieObj.add_genre(genre)
+
+                movieObj.rank = rank
 
                 movieObj.description = description
 
@@ -113,7 +117,7 @@ class MovieFileCSVReader:
                     if genre not in self.dataset_of_genres:
                         self.dataset_of_genres.append(genre)
 
-                index += 1
+                #index += 1
 
 
 class TestMovieFileCSVReaderMethods:
